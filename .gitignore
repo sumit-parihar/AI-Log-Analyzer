@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .idea/
 .env
+# Google service account key
+orbital-alpha-489110-g2-89d54f79ed06.json
