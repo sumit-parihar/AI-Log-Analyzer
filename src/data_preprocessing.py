@@ -91,6 +91,7 @@ df['user_agent'] = df['user_agent'].str.lower()
 print('Sample Dataframes Columns:')
 # print(df.columns.tolist())
 print(df.head())
+print(df.info())
 
 # =========================
 # Save Processed CSV for Sample
