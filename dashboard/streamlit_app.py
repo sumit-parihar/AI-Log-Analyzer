@@ -13,14 +13,14 @@ from src.ml_anomaly_detection import detect_anomalies
 import gspread
 from google.oauth2.service_account import Credentials
 
-# Initialize Sheets credentials
-SERVICE_ACCOUNT_FILE = os.path.join("data", "valued-clarity-489113-n4-ce823f03059b.json")  # service account JSON
+# Initialize Sheets credentials from Streamlit secrets
+
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-credentials = Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE,
-    scopes=SCOPES
-)
+# Load service account JSON from Streamlit secrets
+sa_info = st.secrets["gcp_service_account"]
+
+credentials = Credentials.from_service_account_info(sa_info, scopes=SCOPES)
 gc = gspread.authorize(credentials)
 
 # Your Google Sheet ID containing historic logs
