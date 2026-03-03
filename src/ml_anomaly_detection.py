@@ -29,12 +29,14 @@ def detect_anomalies(df_combined, df_uploaded, contamination=0.05):
     # Drop non-numeric / textual columns that ML cannot use
     numeric_cols = df_combined.select_dtypes(include=['int64','float64','bool']).columns
     X_combined = df_combined[numeric_cols]
+    X_Uploaded = df_uploaded[numeric_cols]
 
     # Optional: scale numeric features
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_combined)
+    X_scaled_combined = scaler.fit_transform(X_combined)
+    X_scaled_uploaded = scaler.transform(X_Uploaded)
 
-    print(f"Feature matrix shape: {X_scaled.shape}")
+    print(f"Feature matrix shape: {X_scaled_combined.shape}")
 
     # Initialize Isolation Forest
     clf = IsolationForest(
@@ -45,14 +47,10 @@ def detect_anomalies(df_combined, df_uploaded, contamination=0.05):
     )
 
     # Fit model on scaled features
-    clf.fit(X_scaled)
+    clf.fit(X_scaled_combined)
 
     # Get anomaly scores (decision function)
-    scores = clf.decision_function(X_scaled)  # higher = normal, lower = anomalous
-
-    # Extract uploaded rows scores
-    uploaded_len = len(df_uploaded)
-    scores_uploaded = scores[-uploaded_len:]
+    scores_uploaded = clf.decision_function(X_scaled_uploaded)  # higher = normal, lower = anomalous
 
     # Apply contamination relative to uploaded rows only
     threshold = np.percentile(scores_uploaded, 100 * contamination)

@@ -66,4 +66,4 @@ def feature_engineering(df, uploaded_len = None):
     else:
         df_uploaded_features = df.copy()
 
-    return df, df_uploaded_features
+    return df_uploaded_features, df
